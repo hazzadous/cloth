@@ -16,7 +16,9 @@ CF_PREFIX = os.environ.get('CLOUDFLARE_PREFIX')
 
 class Backend(object):
   """Lets us plug in ec2 or Cloudflare as we need
-  Instantiate this with
+  Supports either:
+    'ec2' - use ec2 backend
+    'cloudflare' - use zone file from cloudflare instead
   """
   def __init__(self, backend):
     if backend == 'ec2':
