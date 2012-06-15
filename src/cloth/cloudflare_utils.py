@@ -4,26 +4,27 @@ import re
 import requests
 import json
 
-from .utils import use as ec2_use
+from utils import use as ec2_use
 
 # We don't want to operate on all the instances
 # in our zone
-PREFIX = 'cloth-'
 API_BASE = 'https://www.cloudflare.com/api_json.html'
 
 class Node(object):
   def __init__(self, name, ip_address):
     "All we care about are tags (bit between PREFIX and first .) and IP"
     self.tags = {'Name': name}
-    self.ip_address = ip
+    self.ip_address = ip_address
+    self.private_ip_address = None # API compatibility
 
 class CloudflareClient(object):
-  def __init__(self, email, key, zone):
+  def __init__(self, email, key, zone, prefix):
     self.email = email
     self.key = key
     self.zone = zone
+    self.prefix = prefix
 
-  def cloudflare_instances():
+  def cloudflare_instances(self):
     """
     Use the cloudflare API to get a list of all instances
     """
@@ -35,19 +36,19 @@ class CloudflareClient(object):
     objs = json.loads(resp.content)['response']['recs']['objs']
     return objs
 
-  def instances(self, exp='^' + PREFIX + ".*"):
+  def instances(self, exp=".*"):
     "Return a list of instances matching exp"
-    expression = re.compile(exp)
+    expression = re.compile(self.prefix + exp)
     instances = []
     for node in self.cloudflare_instances():
       # Instead of tags we look at anything before the first . in domain name
       if node['type'] == 'A':
-        name = node['name'].lsplit('.', 1)[0].lstrip(PREFIX)
-        if expression.match(node['name']):
+        name = node['display_name'].lstrip(self.prefix)
+        if expression.match(name):
           instances.append(
               Node(
                 name=name,
-                ip=node['content'])
+                ip_address=node['content'])
               )
     return instances
 

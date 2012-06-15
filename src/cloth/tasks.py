@@ -11,6 +11,7 @@ BACKEND = os.environ.get('CLOTH_BACKEND') or 'ec2'
 CF_EMAIL = os.environ.get('CLOUDFLARE_EMAIL')
 CF_KEY = os.environ.get('CLOUDFLARE_API_KEY')
 CF_ZONE = os.environ.get('CLOUDFLARE_ZONE')
+CF_PREFIX = os.environ.get('CLOUDFLARE_PREFIX')
 #! /usr/bin/env python
 
 class Backend(object):
@@ -24,7 +25,7 @@ class Backend(object):
       self.use = use
     elif backend == 'cloudflare':
       from cloth.cloudflare_utils import CloudflareClient
-      self.cf = CloudflareClient(CF_EMAIL, CF_KEY, CF_ZONE)
+      self.cf = CloudflareClient(CF_EMAIL, CF_KEY, CF_ZONE, CF_PREFIX)
       self.instances = cf.instances
       self.use = cf.use
 
