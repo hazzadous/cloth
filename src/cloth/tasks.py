@@ -27,7 +27,7 @@ class Backend(object):
       self.use = use
     elif backend == 'cloudflare':
       from cloth.cloudflare_utils import CloudflareClient
-      self.cf = CloudflareClient(CF_EMAIL, CF_KEY, CF_ZONE, CF_PREFIX)
+      cf = CloudflareClient(CF_EMAIL, CF_KEY, CF_ZONE, CF_PREFIX)
       self.instances = cf.instances
       self.use = cf.use
 
