@@ -16,6 +16,7 @@ setup(
     install_requires=[
         'fabric',
         'boto',
+        'requests',
     ],
     classifiers = [
         "Intended Audience :: Developers",
