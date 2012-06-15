@@ -1,4 +1,4 @@
-A set of tasks for use with Fabric and EC2.
+A set of tasks for use with Fabric and EC2
 
 ## Installation
 
@@ -8,11 +8,21 @@ Now available on PyPi at http://pypi.python.org/pypi/cloth. Installation is ther
     
 ## Configuration
 
+### Using with EC2 (default)
+
 Export your EC2 credntials as environment variables.
 
     export AWS_EC2_REGION=eu-west-1
     export AWS_ACCESS_KEY_ID=<your-access-key>
     export AWS_SECRET_ACCESS_KEY=<your-secret-key>
+
+### Using with Cloudflare
+
+    export CLOTH_BACKEND=cloudflare # If not set defaults to ec2
+    export CLOUDFLARE_EMAIL=you@email.com
+    export CLOUDFLARE_API_KEY=<your-cloudflare-api-key>
+    export CLOUDFLARE_ZONE=example.com
+    export CLOUDFLARE_PREFIX=cloth-
 
 ## Usages
 

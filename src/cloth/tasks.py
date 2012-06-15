@@ -13,7 +13,6 @@ CF_EMAIL = os.environ.get('CLOUDFLARE_EMAIL')
 CF_KEY = os.environ.get('CLOUDFLARE_API_KEY')
 CF_ZONE = os.environ.get('CLOUDFLARE_ZONE')
 CF_PREFIX = os.environ.get('CLOUDFLARE_PREFIX')
-#! /usr/bin/env python
 
 class Backend(object):
   """Lets us plug in ec2 or Cloudflare as we need
