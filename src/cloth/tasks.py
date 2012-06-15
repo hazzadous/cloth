@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 from collections import defaultdict
+import os
 
 from fabric.api import run, env, sudo, task, runs_once, roles
 
@@ -40,13 +41,13 @@ def all():
 @task
 def preview():
     "Preview nodes"
-    for node in instances('^preview-'):
+    for node in instances('preview-'):
         use(node)
 
 @task
 def production():
     "Production nodes"
-    for node in instances('^production-'):
+    for node in instances('production-'):
         use(node)
 
 @task
