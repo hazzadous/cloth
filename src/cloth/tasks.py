@@ -30,12 +30,14 @@ class Backend(object):
       self.use = cf.use
 
 backend = Backend(BACKEND)
+instances = backend.instances
+use = backend.use
 
 @task
 def all():
     "All nodes"
-    for node in backend.instances():
-        backend.use(node)
+    for node in instances():
+        use(node)
 
 @task
 def preview():
