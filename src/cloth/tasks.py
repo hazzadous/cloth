@@ -22,11 +22,11 @@ class Backend(object):
   """
   def __init__(self, backend):
     if backend == 'ec2':
-      from cloth.utils import instances, use
+      from utils import instances, use
       self.instances = instances
       self.use = use
     elif backend == 'cloudflare':
-      from cloth.cloudflare_utils import CloudflareClient
+      from cloudflare_utils import CloudflareClient
       cf = CloudflareClient(CF_EMAIL, CF_KEY, CF_ZONE, CF_PREFIX)
       self.instances = cf.instances
       self.use = cf.use
@@ -39,6 +39,7 @@ use = backend.use
 def all():
     "All nodes"
     for node in instances():
+        print node.tags['Name']
         use(node)
 
 @task

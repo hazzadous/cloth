@@ -44,7 +44,9 @@ class CloudflareClient(object):
       # Instead of tags we look at anything before the first . in domain name
       if node['type'] == 'A':
         name = node['display_name'].lstrip(self.prefix)
+        print "Checking %s against %s" % (name, self.prefix + exp)
         if expression.match(name):
+          print 'Matched %s' % name
           instances.append(
               Node(
                 name=name,
