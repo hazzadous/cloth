@@ -4,18 +4,37 @@ from collections import defaultdict
 
 from fabric.api import run, env, sudo, task, runs_once, roles
 
-from cloth.utils import instances, use
-
-
 env.nodes = []
 env.roledefs = defaultdict(list)
 
+BACKEND = os.environ.get('CLOTH_BACKEND') or 'ec2'
+CF_EMAIL = os.environ.get('CLOUDFLARE_EMAIL')
+CF_KEY = os.environ.get('CLOUDFLARE_API_KEY')
+CF_ZONE = os.environ.get('CLOUDFLARE_ZONE')
+#! /usr/bin/env python
+
+class Backend(object):
+  """Lets us plug in ec2 or Cloudflare as we need
+  Instantiate this with
+  """
+  def __init__(self, backend):
+    if backend == 'ec2':
+      from cloth.utils import instances, use
+      self.instances = instances
+      self.use = use
+    elif backend == 'cloudflare':
+      from cloth.cloudflare_utils import CloudflareClient
+      self.cf = CloudflareClient(CF_EMAIL, CF_KEY, CF_ZONE)
+      self.instances = cf.instances
+      self.use = cf.use
+
+backend = Backend(BACKEND)
 
 @task
 def all():
     "All nodes"
-    for node in instances():
-        use(node)
+    for node in backend.instances():
+        backend.use(node)
 
 @task
 def preview():
