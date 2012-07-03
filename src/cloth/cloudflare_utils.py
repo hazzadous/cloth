@@ -17,6 +17,12 @@ class Node(object):
     self.ip_address = ip_address
     self.private_ip_address = None # API compatibility
 
+  def __unicode__(self):
+    return '%s: %s' % (self.tags['Name'], self.ip_address)
+
+  def __repr__(self):
+    return self.__unicode__()
+
 class CloudflareClient(object):
   def __init__(self, email, key, zone, prefix):
     self.email = email
@@ -38,12 +44,12 @@ class CloudflareClient(object):
 
   def instances(self, exp=".*"):
     "Return a list of instances matching exp"
-    expression = re.compile(self.prefix + exp)
+    expression = re.compile('(?u)' + self.prefix + exp)
     instances = []
     for node in self.cloudflare_instances():
       # Instead of tags we look at anything before the first . in domain name
       if node['type'] == 'A':
-        name = node['display_name'].lstrip(self.prefix)
+        name = node['display_name']
         if expression.match(name):
           instances.append(
               Node(
