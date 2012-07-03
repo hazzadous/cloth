@@ -39,19 +39,18 @@ use = backend.use
 def all():
     "All nodes"
     for node in instances():
-        print node.tags['Name']
         use(node)
 
 @task
 def preview():
     "Preview nodes"
-    for node in instances('preview-'):
+    for node in instances('preview-.*'):
         use(node)
 
 @task
 def production():
     "Production nodes"
-    for node in instances('production-'):
+    for node in instances('production-.*'):
         use(node)
 
 @task

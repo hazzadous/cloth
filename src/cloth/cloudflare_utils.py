@@ -42,15 +42,15 @@ class CloudflareClient(object):
     objs = json.loads(resp.content)['response']['recs']['objs']
     return objs
 
-  def instances(self, exp=".*"):
+  def instances(self, exp="*"):
     "Return a list of instances matching exp"
     expression = re.compile('(?u)' + self.prefix + exp)
     instances = []
     for node in self.cloudflare_instances():
       # Instead of tags we look at anything before the first . in domain name
       if node['type'] == 'A':
-        name = node['display_name']
-        if expression.match(name):
+        if expression.match(node['display_name']):
+          name = node['display_name'][len(self.prefix):]
           instances.append(
               Node(
                 name=name,

@@ -37,6 +37,7 @@ def use(node):
         role = node.tags.get("Name").split('-')[1]
         env.roledefs[role] += [node.ip_address]
     except IndexError:
+        print "No role set for %s" % node
         pass
     env.nodes += [node]
     env.hosts += [node.ip_address]
