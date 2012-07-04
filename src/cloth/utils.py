@@ -12,6 +12,8 @@ REGION = os.environ.get("AWS_EC2_REGION")
 def ec2_instances():
     "Use the EC2 API to get a list of all machines"
     region = boto.ec2.get_region(REGION)
+    if not region:
+        return []
     reservations = region.connect().get_all_instances()
     instances = []
     for reservation in reservations:

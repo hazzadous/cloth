@@ -3,8 +3,14 @@
 import re
 import requests
 import json
+import os
 
 from utils import use as ec2_use
+
+CF_EMAIL = os.environ.get('CLOUDFLARE_EMAIL')
+CF_KEY = os.environ.get('CLOUDFLARE_API_KEY')
+CF_ZONE = os.environ.get('CLOUDFLARE_ZONE')
+CF_PREFIX = os.environ.get('CLOUDFLARE_PREFIX')
 
 # We don't want to operate on all the instances
 # in our zone
@@ -42,7 +48,7 @@ class CloudflareClient(object):
     objs = json.loads(resp.content)['response']['recs']['objs']
     return objs
 
-  def instances(self, exp="*"):
+  def instances(self, exp=".*"):
     "Return a list of instances matching exp"
     expression = re.compile('(?u)' + self.prefix + exp)
     instances = []
@@ -58,5 +64,9 @@ class CloudflareClient(object):
               )
     return instances
 
-  def use(self, node):
-    return ec2_use(node)
+def instances(exp=".*"):
+  try:
+    cf = CloudflareClient(CF_EMAIL, CF_KEY, CF_ZONE, CF_PREFIX)
+  except:
+    return []
+  return cf.instances(exp)

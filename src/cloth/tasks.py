@@ -4,41 +4,23 @@ from collections import defaultdict
 import os
 
 from fabric.api import run, env, sudo, task, runs_once, roles
+from utils import instances, use
+from cloudflare_utils import instances as cf_instances
 
 env.nodes = []
 env.roledefs = defaultdict(list)
-
-BACKEND = os.environ.get('CLOTH_BACKEND') or 'ec2'
-CF_EMAIL = os.environ.get('CLOUDFLARE_EMAIL')
-CF_KEY = os.environ.get('CLOUDFLARE_API_KEY')
-CF_ZONE = os.environ.get('CLOUDFLARE_ZONE')
-CF_PREFIX = os.environ.get('CLOUDFLARE_PREFIX')
-
-class Backend(object):
-  """Lets us plug in ec2 or Cloudflare as we need
-  Supports either:
-    'ec2' - use ec2 backend
-    'cloudflare' - use zone file from cloudflare instead
-  """
-  def __init__(self, backend):
-    if backend == 'ec2':
-      from utils import instances, use
-      self.instances = instances
-      self.use = use
-    elif backend == 'cloudflare':
-      from cloudflare_utils import CloudflareClient
-      cf = CloudflareClient(CF_EMAIL, CF_KEY, CF_ZONE, CF_PREFIX)
-      self.instances = cf.instances
-      self.use = cf.use
-
-backend = Backend(BACKEND)
-instances = backend.instances
-use = backend.use
 
 @task
 def all():
     "All nodes"
     for node in instances():
+        use(node)
+    for node in cf_instances():
+        use(node)
+
+@task
+def cloudflare():
+    for node in cf_instances():
         use(node)
 
 @task
@@ -46,17 +28,23 @@ def preview():
     "Preview nodes"
     for node in instances('preview-.*'):
         use(node)
+    for node in cf_instances('preview-.*'):
+        use(node)
 
 @task
 def production():
     "Production nodes"
     for node in instances('production-.*'):
         use(node)
+    for node in cf_instances('production-.*'):
+        use(node)
 
 @task
 def nodes(exp):
     "Select nodes based on a regular expression"
     for node in instances(exp):
+        use(node)
+    for node in cf_instances(exp):
         use(node)
 
 @task
