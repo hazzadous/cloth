@@ -19,7 +19,7 @@ def all():
         use(node)
 
 @task
-def cloudflare():
+def cloudflare(exp='.*'):
     for node in cf_instances():
         use(node)
 

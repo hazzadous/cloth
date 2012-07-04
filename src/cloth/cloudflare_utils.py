@@ -65,8 +65,8 @@ class CloudflareClient(object):
     return instances
 
 def instances(exp=".*"):
-  try:
-    cf = CloudflareClient(CF_EMAIL, CF_KEY, CF_ZONE, CF_PREFIX)
-  except:
+  if not (CF_EMAIL and CF_KEY and CF_ZONE and CF_PREFIX):
+    print 'No Cloudflare credentials provided'
     return []
+  cf = CloudflareClient(CF_EMAIL, CF_KEY, CF_ZONE, CF_PREFIX)
   return cf.instances(exp)
