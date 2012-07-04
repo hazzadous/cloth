@@ -24,6 +24,11 @@ def cloudflare(exp='.*'):
         use(node)
 
 @task
+def ec2(exp='.*'):
+    for node in instances(exp):
+        use(node)
+
+@task
 def preview():
     "Preview nodes"
     for node in instances('preview-.*'):

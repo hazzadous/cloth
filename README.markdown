@@ -1,11 +1,11 @@
-A set of tasks for use with Fabric and EC2
+A set of tasks for use with Fabric and EC2 (and Cloudflare!)
 
 ## Installation
 
-Now available on PyPi at http://pypi.python.org/pypi/cloth. Installation is therefore as simple as:
+You have to install from the github repo at the moment:
 
-    pip install cloth
-    
+    pip install -e git+https://github.com/dbuxton/cloth.git#egg=cloth
+
 ## Configuration
 
 ### Using with EC2 (default)
@@ -37,7 +37,9 @@ This will give you a good few commands.
     ⚡ fab -l
     Available commands:
 
-      all         All nodes
+      all         All nodes (including cloudflare)
+      cloudflare  Just cloudflare nodes (can also enter a regex)
+      ec2         Just ec2 nodes (can use a regex)
       free        Show memory stats
       list        List EC2 name and public and private ip address
       nodes       Select nodes based on a regular expression
@@ -52,8 +54,8 @@ to load EC2 instances for further command running.
 
     ⚡ fab all list
 
-The above should list all of your EC2 instances including the name and
-public and private ip addresses.
+The above should list all of your EC2 and Cloudflare instances including 
+the name and public and private ip addresses.
 
     ⚡ fab nodes:"^production.*" list
 
