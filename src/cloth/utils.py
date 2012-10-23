@@ -25,7 +25,7 @@ def instances(exp=".*"):
     expression = re.compile(exp)
     instances = []
     for node in ec2_instances():
-        if node.tags and node.ip_address:
+        if node.tags and node.public_dns_name:
             try:
                 if expression.match(node.tags.get("Name")):
                     instances.append(node)
@@ -37,10 +37,10 @@ def use(node):
     "Set the fabric environment for the specifed node"
     try:
         role = node.tags.get("Name").split('-')[1]
-        env.roledefs[role] += [node.ip_address]
+        env.roledefs[role] += [node.public_dns_name]
     except IndexError:
         print "No role set for %s" % node
         pass
     env.nodes += [node]
-    env.hosts += [node.ip_address]
+    env.hosts += [node.public_dns_name]
 
